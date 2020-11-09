@@ -1,0 +1,882 @@
+<ion-header>
+  <ion-toolbar>
+    <button slot="start" mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col size="8" class="ion-no-padding">
+          <div>
+            <ion-title slot="start" style="padding: 0;">
+              <ion-img src="../../assets/LOGO_Medicare_ANGOLA.svg" class="logo_cursor" routerLink="/home"></ion-img>
+            </ion-title>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-no-padding username">
+          <div *ngIf="user">
+            <b>{{user.name}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <mat-drawer-container class="example-container" hasBackdrop="true" style="height: 100% !important;">
+    <mat-drawer #drawer mode="over" class="menu-mat-drawer">
+      <app-menu-item-modal active_url='/CallCenterAdmin/dashboard-analyze'></app-menu-item-modal>
+    </mat-drawer>
+    <mat-drawer-content class="menu-mat-drawer-content ion-padding" *ngIf="show">
+      <!-- <div style="text-align: right;">
+        <ion-button (click)="ExportTOExcel()">
+          <mat-icon>import_export</mat-icon>
+          Exportar p/ Excel
+        </ion-button>
+      </div><br> -->
+      <mat-card class="mat-elevation-z8 action-card">
+        <h3><i class="fa fa-arrow-left mr-1"></i>OutBound</h3>
+        <!-- Base de Dados -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Base de Dados OutBound</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie" palette="bright" [dataSource]="datasource_leads_per_phese.base_de_dados"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_bd> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.base_de_dados">
+                    <div #TABLE_qps_bd>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.base_de_dados" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_bd> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.base_de_dados">
+                    <div #TABLE_fps_bd>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.base_de_dados" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #ref> -->
+                        <span>Referências</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="db_contacts_per_reference">
+                    <div #TABLE_ref class="example-table-container">
+                      <table mat-table #table [dataSource]="db_contacts_per_reference" matSort class="mat-elevation-z8 example-table"
+                        style="margin: 0 !important;">
+                        <ng-container matColumnDef="ref_id">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Referência </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.ref_id}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="ref_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.ref_count)}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="created_at">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+                          <td mat-cell *matCellDef="let data"> {{data.created_at}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef> Acção </th>
+                          <td mat-cell *matCellDef="let data" width="13%">
+                            <button mat-icon-button style="color: var(--red);" (click)="onReferenceClicked(data.ref_id)"
+                              matTooltip="Ver detalhes">
+                              <mat-icon>search</mat-icon>
+                            </button>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="refdisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: refdisplayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="card m-height">
+                  <div class="card-body">
+                    <div class="card card-widget">
+                      <div class="widget-user-header bg-danger">
+                        <h3 class="widget-user-username text-center" *ngIf="!db_contacts_per_reference_selected">
+                          Detalhes
+                        </h3>
+                        <h3 class="widget-user-username text-center" *ngIf="db_contacts_per_reference_selected">Detalhes
+                          «{{db_contacts_per_reference_selected.ref_id}}»</h3>
+                      </div>
+                      <div class="card-footer p-0" *ngIf="db_contacts_per_reference_selected">
+                        <ul class="nav flex-column">
+                          <li class="nav-item"
+                            *ngFor="let detalhe of db_contacts_per_reference_selected.data_per_state">
+                            <a class="nav-link">
+                              {{detalhe.label}}
+                              <span
+                                class="float-right badge bg-primary">{{customizeTableLabel(detalhe.lead_count)}}</span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+        <!-- Netaff -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Leads Netaff</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie7" #pie7 palette="bright" [dataSource]="datasource_leads_per_phese.netaff"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_na> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.netaff">
+                    <div #TABLE_qps_na>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.netaff" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_na> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.netaff">
+                    <div #TABLE_fps_na>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.netaff" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+        <!-- Leads Comerciais -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Leads Comerciais</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie3" #pie3 palette="bright"
+                      [dataSource]="datasource_leads_per_phese.leads_comercias"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_lc> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.leads_comercias">
+                    <div #TABLE_qps_lc>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.leads_comercias" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_lc> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.leads_comercias">
+                    <div #TABLE_fps_lc>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.leads_comercias" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+        <!-- Renovações -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Renovações</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie2" #pie2 palette="bright" [dataSource]="datasource_leads_per_phese.renovacoes"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_rn> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.renovacoes">
+                    <div #TABLE_qps_rn>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.renovacoes" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_rn> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.renovacoes">
+                    <div #TABLE_fps_rn>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.renovacoes" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+        <!-- Referência -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Recomendação</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie9" #pie9 palette="bright" [dataSource]="datasource_leads_per_phese.referencia"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_rf> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.referencia">
+                    <div #TABLE_qps_rf>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.referencia" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_rf> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.referencia">
+                    <div #TABLE_fps_rf>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.referencia" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+      </mat-card>
+
+      <mat-card class="mat-elevation-z8 action-card" style="margin-bottom: 50px !important;">
+        <h3><i class="fa fa-arrow-right mr-1"></i>InBound</h3>
+        <!-- Média -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Média</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie4" #pie4 palette="bright" [dataSource]="datasource_leads_per_phese.media"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_md> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.media">
+                    <div #TABLE_qps_md>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.media" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_md> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.media">
+                    <div #TABLE_fps_md>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.media" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+        <!-- WhatsApp -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>WhatsApp</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie8" #pie8 palette="bright" [dataSource]="datasource_leads_per_phese.whatsapp"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_wt> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.whatsapp">
+                    <div #TABLE_qps_wt>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.whatsapp" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_wt> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.whatsapp">
+                    <div #TABLE_fps_wt>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.whatsapp" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+        <!-- Geral -->
+        <mat-card class="mat-elevation-z8 action-card">
+          <h3>Geral</h3>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="card">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Contactos Por Fase</h3>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <dx-pie-chart id="pie5" #pie5 palette="bright" [dataSource]="datasource_leads_per_phese.geral"
+                      (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                      <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                        verticalAlignment="bottom" [columnCount]="3"></dxo-legend>
+                      <dxi-series argumentField="label" valueField="lead_count">
+                        <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                          <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                        </dxo-label>
+                      </dxi-series>
+                    </dx-pie-chart>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #qps_gr> -->
+                        <span>Contactos
+                          Qualificados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_qualified_per_state.geral">
+                    <div #TABLE_qps_gr>
+                      <table mat-table #table [dataSource]="datasource_qualified_per_state.geral" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col size="4">
+                <div class="card m-height">
+                  <div class="card-header border-0">
+                    <div class="d-flex justify-content-between">
+                      <!-- <mat-checkbox class="card-title" #fps_gr> -->
+                        <span>Contactos
+                          Finalizados Por Estado</span>
+                      <!-- </mat-checkbox> -->
+                    </div>
+                  </div>
+                  <div class="card-body" *ngIf="datasource_finalized_per_state.geral">
+                    <div #TABLE_fps_gr>
+                      <table mat-table #table [dataSource]="datasource_finalized_per_state.geral" matSort
+                        class="mat-elevation-z8" style="margin: 0 !important;">
+                        <ng-container matColumnDef="label">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                          <td mat-cell *matCellDef="let data" class="uname"> {{data.label}}
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="lead_count">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantidade </th>
+                          <td mat-cell *matCellDef="let data"> {{customizeTableLabel(data.lead_count)}}
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </mat-card>
+      </mat-card>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</ion-content>

@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <button slot="start" mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col size="8" class="ion-no-padding">
+          <div>
+            <ion-title slot="start" style="padding: 0;">
+              <ion-img src="../../assets/LOGO_Medicare_ANGOLA.svg" class="logo_cursor" routerLink="/home"></ion-img>
+            </ion-title>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-no-padding username">
+          <div *ngIf="user">
+            <b>{{user.name}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <mat-drawer-container class="example-container" hasBackdrop="true" style="height: 100% !important;">
+    <mat-drawer #drawer mode="over" class="menu-mat-drawer">
+      <app-menu-item-modal active_url='/home'></app-menu-item-modal>
+    </mat-drawer>
+    <mat-drawer-content class="menu-mat-drawer-content ion-padding">
+    </mat-drawer-content>
+  </mat-drawer-container>
+</ion-content>

@@ -1,0 +1,59 @@
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-column-action {
+    text-align: center !important;
+}
+
+/* AdminLte3 */
+.widget-user-header {
+    height: 50px !important;
+}
+
+.table td {
+    vertical-align: middle !important;
+}
+
+.m15 {
+    margin-left: 15px !important;
+}
+
+::ng-deep #pie,
+::ng-deep #pie2,
+::ng-deep #pie3,
+::ng-deep #pie4,
+::ng-deep #pie5 {
+    height: auto !important;
+    width: auto !important;
+}
+
+::ng-deep #chart {
+    width: auto !important;
+}
+
+.text-right {
+    text-align: right !important;
+    float: right !important;
+}
+
+@media(max-width: 700px) {
+    .menu-mat-drawer-content {
+        ion-col {
+            min-width: 100%;
+        }
+
+        .mat-card {
+            padding: 8px !important;
+
+            ion-grid {
+                padding: 0 !important;
+            }
+        }
+    }
+}

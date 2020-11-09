@@ -1,0 +1,25 @@
+// ion-icon {
+//     font-size: 24px !important;
+// }
+
+li,
+a {
+    cursor: pointer !important;
+}
+
+.d-block {
+    font-size: 17px !important;
+}
+
+.active p {
+    color: #fff !important;
+}
+
+.active {
+    background-color: var(--red) !important;
+}
+
+.active-child {
+    background-color: rgba(0, 0, 0, .1) !important;
+    color: var(--red) !important;
+}

@@ -1,0 +1,63 @@
+::ng-deep #pie,
+::ng-deep #pie2,
+::ng-deep #pie3,
+::ng-deep #pie4,
+::ng-deep #pie5,
+::ng-deep #pie6,
+::ng-deep #pie7,
+::ng-deep #pie8,
+::ng-deep #pie9 {
+    height: auto !important;
+    width: auto !important;
+}
+
+.m15 {
+    margin-left: 15px !important;
+}
+
+.m-height {
+    min-height: 484px !important;
+}
+
+.nav-link {
+    color: var(--red) !important;
+    cursor: pointer !important;
+}
+
+.nav-link:hover {
+    color: #007BFF !important;
+}
+
+.card-title span {
+    font-weight: normal !important;
+}
+
+.example-table-container {
+    position: relative;
+    max-height: 400px;
+    overflow: auto;
+}
+
+
+@media(max-width:700px) {
+    .menu-mat-drawer-content ion-col {
+        min-width: 100%;
+    }
+
+    .mat-card {
+        padding: 8px !important;
+
+        ion-grid {
+            padding: 0 !important;
+        }
+    }
+
+    h3,
+    .card-title {
+        font-size: .88rem !important;
+    }
+
+    .m-height {
+        min-height: auto !important;
+    }
+}

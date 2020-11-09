@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,UAAU,CAAC;EACP,OAAO,EAAE,IAAI;EACb,eAAe,EAAE,MAAM;EACvB,MAAM,EAAE,SAAS;CACpB;;AAED,AAAA,OAAO,CAAC;EACJ,UAAU,EAAE,iBAAiB;CAChC",
+    "sources": [
+        "not-authorized.page.scss"
+    ],
+    "names": [],
+    "file": "not-authorized.page.css"
+}

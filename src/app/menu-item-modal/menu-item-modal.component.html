@@ -1,0 +1,41 @@
+<aside class="sidebar-light-danger elevation-12">
+  <div class="sidebar">
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="../../assets/user.png" class="img-circle elevation-2" alt="User Image">
+      </div>
+      <div class="info">
+        <a class="d-block" *ngIf="user">{{user.name}}</a>
+      </div>
+    </div>
+
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item" *ngFor="let menu_page of menu_items"
+          [ngClass]="{'has-treeview': menu_page.children.length > 0 }">
+          <a (click)="onRouter(menu_page)" class="nav-link" [ngClass]="{'active': menu_page.url === active_url}"
+            *ngIf="menu_page.children.length <= 0">
+            <i *ngIf="menu_page.page_code !== 'whatsapp'" [class]="'nav-icon fas fa-' + menu_page.icone"></i>
+            <i *ngIf="menu_page.page_code === 'whatsapp'" [class]="'nav-icon fab fa-' + menu_page.icone"></i>
+            <p>{{menu_page.name}}</p>
+          </a>
+
+          <a class="nav-link" *ngIf="menu_page.children.length > 0"
+            [ngClass]="{'active': verify(active_url, menu_page.children) === active_url}">
+            <i [class]="'nav-icon fas fa-' + menu_page.icone"></i>
+            <p>{{menu_page.name}}</p>
+            <i class="fas fa-angle-left right"></i>
+          </a>
+          <ul class="nav nav-treeview" *ngIf="menu_page.children.length > 0">
+            <li class="nav-item" *ngFor="let child of menu_page.children">
+              <a (click)="onRouter(child)" class="nav-link" [ngClass]="{'active-child': child.url === active_url}">
+                <i [class]="'nav-icon fas fa-' + child.icone"></i>
+                <p>{{child.name}}</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>

@@ -1,0 +1,90 @@
+<!-- <ion-content>
+  <ion-grid class="form_row">
+    <ion-row>
+      <ion-col size="12">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <ion-img src="../../assets/LOGO_Medicare_ANGOLA.svg" style="height: 70px !important;"></ion-img>
+            </ion-col>
+            <ion-col size="12" style="display: flex; justify-content: center;">
+              <mat-card>
+                <mat-card-title>Login</mat-card-title>
+                <mat-card-content>
+                  <form [formGroup]="form">
+                    <p>
+                      <mat-form-field>
+                        <input autofocus type="email" matInput placeholder="E-mail" formControlName="email">
+                        <mat-error>Obrigatório/Inválido.</mat-error>
+                      </mat-form-field>
+                    </p>
+
+                    <p>
+                      <mat-form-field>
+                        <input type="password" matInput placeholder="Password" formControlName="password"
+                          (keydown.enter)="onLogin()">
+                        <mat-error>Obrigatório.</mat-error>
+                      </mat-form-field>
+                    </p>
+
+                    <div class="align_button">
+                      <ion-button [disabled]="!form.valid" (click)="onLogin()">
+                        <ion-icon name="arrow-round-forward" slot="start"></ion-icon>
+                        Entrar
+                      </ion-button>
+                    </div>
+
+                  </form>
+                </mat-card-content>
+              </mat-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content> -->
+
+<!-- <link rel="stylesheet" type="text/css" href="../../assets/login_v3/css/main.css"> -->
+
+<div class="limiter">
+  <div class="container-login100" style="background-image: url('../../assets/cc2.jpg');">
+    <div class="wrap-top">
+      <div class="wrap-login100">
+        <form class="login100-form validate-form" [formGroup]="form">
+          <span class="login100-form-logo">
+            <img src="../../assets/favicon.png">
+          </span>
+
+          <span class="login100-form-title p-b-34 p-t-27">
+            Log in
+          </span>
+
+          <div class="wrap-input100 validate-input" data-validate="Digite o E-mail"
+            [ngClass]="{'alert-validate': !(form.controls.email.valid)}">
+            <input class="input100" type="email" placeholder="E-mail" formControlName="email">
+            <span class="focus-input100" data-placeholder="&#xf207;"></span>
+          </div>
+
+          <div class="wrap-input100 validate-input" data-validate="Digite Password"
+            [ngClass]="{'alert-validate': !(form.controls.password.valid)}">
+            <input class="input100" type="password" placeholder="Password" formControlName="password">
+            <span class="focus-input100" data-placeholder="&#xf191;"></span>
+          </div>
+
+          <div class="container-login100-form-btn">
+            <button class="login100-form-btn" [disabled]="!form.valid" (click)="onLogin()">
+              Entrar
+            </button>
+          </div>
+
+          <div class="text-center p-t-90">
+            <a class="txt1" href="https://www.medicare.co.ao" target="_blank">
+              Visite Site Medicare
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

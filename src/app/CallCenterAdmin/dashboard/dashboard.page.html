@@ -1,0 +1,329 @@
+<ion-header>
+  <ion-toolbar>
+    <button slot="start" mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col size="8" class="ion-no-padding">
+          <div>
+            <ion-title slot="start" style="padding: 0;">
+              <ion-img src="../../assets/LOGO_Medicare_ANGOLA.svg" class="logo_cursor" routerLink="/home"></ion-img>
+            </ion-title>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-no-padding username">
+          <div *ngIf="user">
+            <b>{{user.name}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <mat-drawer-container class="example-container" hasBackdrop="true" style="height: 100% !important;">
+    <mat-drawer #drawer mode="over" class="menu-mat-drawer">
+      <app-menu-item-modal active_url='/CallCenterAdmin/dashboard'></app-menu-item-modal>
+    </mat-drawer>
+    <mat-drawer-content class="menu-mat-drawer-content ion-padding" *ngIf="show">
+      <mat-card class="mat-elevation-z8 action-card">
+        <div class="col-md-12">
+          <p class="text-center">
+            <strong>Objectivos Gerais Mensal</strong>
+          </p>
+
+          <div class="progress-group" *ngIf="cc_objective">
+            {{functions.percentage(cc_objective)}}
+            <span class="float-right"><b>{{cc_objective.current_sales}}/{{cc_objective.month_sales}}</b></span>
+            <div class="progress progress-sm">
+              <div class="progress-bar bg-primary" [ngClass]="{'bg-danger': prc(cc_objective) < 30, 'bg-warning' : prc(cc_objective)>= 30
+                && prc(cc_objective) < 60, 'bg-success' : prc(cc_objective)>= 60 }" [ngStyle]="{'width':
+                  cc_objective.current_sales > 0 ? functions.percentage(cc_objective) :
+                  '0%' }"></div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+      <mat-card class="mat-elevation-z8 action-card">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="4">
+              <div class="card card-widget">
+                <div class="widget-user-header bg-danger">
+                  <h3 class="widget-user-username text-center">Vendas Por Plano</h3>
+                </div>
+                <div class="card-footer p-0">
+                  <ul class="nav flex-column">
+                    <li class="nav-item" *ngFor="let sale of sale_per_plans">
+                      <a href="javascript:void(0)" class="nav-link">
+                        {{sale.plan}}
+                        <span class="float-right badge bg-danger m15">{{sale.contracts_number}}</span>
+                        <span class="float-right badge bg-primary">{{sale.string_amount}}</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <dx-pie-chart id="pie" title="Volume de Vendas" palette="bright" [dataSource]="sale_per_plans"
+                (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                  verticalAlignment="bottom" [columnCount]="2"></dxo-legend>
+                <dxi-series argumentField="plan" valueField="amount">
+                  <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                    <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                  </dxo-label>
+                </dxi-series>
+              </dx-pie-chart>
+            </ion-col>
+            <ion-col size="4">
+              <dx-pie-chart id="pie2" #pie2 title="Qtd de Vendas" palette="bright" [dataSource]="sale_per_plans"
+                (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                  verticalAlignment="bottom" [columnCount]="2"></dxo-legend>
+                <dxi-series argumentField="plan" valueField="contracts_number">
+                  <dxo-label [visible]="true" position="columns">
+                    <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                  </dxo-label>
+                </dxi-series>
+              </dx-pie-chart>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </mat-card>
+      <mat-card class="mat-elevation-z8 action-card">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Vendas Semanais</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="12">
+                        <div class="d-flex">
+                          <p class="d-flex flex-column">
+                            <span class="text-bold text-lg">{{weekly_sales.today_number}} /
+                              {{weekly_sales.today_amount}} Akz</span>
+                            <span>Hoje</span>
+                          </p>
+                        </div>
+
+
+                        <dx-chart id="chart" [dataSource]="weekly_sales.serie_data">
+                          <dxi-series valueField="last_week_contracts_number"></dxi-series>
+                          <dxi-series valueField="current_week_contracts_number"></dxi-series>
+                          <dxo-common-series-settings argumentField="day" type="bar" hoverMode="allArgumentPoints"
+                            selectionMode="allArgumentPoints">
+                          </dxo-common-series-settings>
+                          <dxo-legend [visible]="false"></dxo-legend>
+                          <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeLabel">
+                          </dxo-tooltip>
+                        </dx-chart>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title">Vendas Mensais</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="12">
+                        <div class="d-flex">
+                          <p class="d-flex flex-column">
+                            <span class="text-bold text-lg">{{monthly_sales.month_number}} /
+                              {{monthly_sales.month_amount}} Akz</span>
+                            <span>Este Mês</span>
+                          </p>
+                        </div>
+
+                        <dx-chart id="chart2" #chart2 [dataSource]="monthly_sales.months">
+                          <dxi-series argumentField="day" valueField="contracts_number" type="bar" color="#BF3739">
+                          </dxi-series>
+                          <dxo-tooltip [enabled]="true" location="edge" [customizeTooltip]="customizeLabel">
+                          </dxo-tooltip>
+                          <dxo-legend [visible]="false"></dxo-legend>
+                        </dx-chart>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </mat-card>
+      <mat-card class="mat-elevation-z8 action-card">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="4">
+              <div class="card card-widget">
+                <div class="widget-user-header bg-danger">
+                  <h3 class="widget-user-username text-center">Vendas Por Origem</h3>
+                </div>
+                <div class="card-footer p-0">
+                  <ul class="nav flex-column">
+                    <li class="nav-item" *ngFor="let sale_o of sale_per_origin">
+                      <a href="javascript:void(0)" class="nav-link">
+                        {{sale_o.Origem}}
+                        <span class="float-right badge bg-danger m15">{{sale_o.contracts_number}}</span>
+                        <span class="float-right badge bg-primary">{{sale_o.string_amount}}</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <dx-pie-chart id="pie3" #pie3 title="Volume de Vendas" palette="bright" [dataSource]="sale_per_origin"
+                (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                  verticalAlignment="bottom" [columnCount]="2">
+                </dxo-legend>
+                <dxi-series argumentField="Origem" valueField="amount">
+                  <dxo-label [visible]="true" position="columns" [customizeText]="customizeLabel">
+                    <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                  </dxo-label>
+                </dxi-series>
+              </dx-pie-chart>
+            </ion-col>
+            <ion-col size="4">
+              <dx-pie-chart id="pie4" #pie4 title="Qtd de Vendas" palette="bright" [dataSource]="sale_per_origin"
+                (onPointClick)="pointClickHandler($event)" (onLegendClick)="legendClickHandler($event)">
+                <dxo-legend orientation="horizontal" itemTextPosition="right" horizontalAlignment="center"
+                  verticalAlignment="bottom" [columnCount]="2">
+                </dxo-legend>
+                <dxi-series argumentField="Origem" valueField="contracts_number">
+                  <dxo-label [visible]="true" position="columns">
+                    <dxo-connector [visible]="true" [width]="0.5"></dxo-connector>
+                  </dxo-label>
+                </dxi-series>
+              </dx-pie-chart>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </mat-card>
+      <mat-card class="mat-elevation-z8 action-card">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="8">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title"><i class="fa fa-chart-area mr-1"></i>Performace de Venda</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <dx-chart id="chart4" #chart4 palette="violet" [dataSource]="sale_performance">
+                    <dxi-series valueField="sale_count" color="#009900"></dxi-series>
+                    <dxo-common-series-settings #seriesSettings argumentField="label" type="spline">
+                    </dxo-common-series-settings>
+                    <dxo-margin [bottom]="20"></dxo-margin>
+                    <dxo-common-axis-settings>
+                      <dxo-grid [visible]="true"></dxo-grid>
+                    </dxo-common-axis-settings>
+                    <dxo-legend [visible]="false" verticalAlignment="bottom" horizontalAlignment="center">
+                    </dxo-legend>
+                    <dxo-argument-axis [allowDecimals]="false" [axisDivisionFactor]="60">
+                      <dxo-label>
+                        <dxo-format type="decimal"></dxo-format>
+                      </dxo-label>
+                    </dxo-argument-axis>
+                    <dxo-tooltip [enabled]="true"></dxo-tooltip>
+                  </dx-chart>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title"><i class="fa fa-chart-pie mr-1"></i>Este Mês</h3>
+                  </div>
+                </div>
+                <div class="card-body" style="min-height: 440 !important;">
+                  <dx-pie-chart id="pie5" #pie5 type="doughnut" palette="Bright" [dataSource]="sale_state">
+                    <dxi-series argumentField="label" valueField="sale_count">
+                      <dxo-label [visible]="true">
+                        <dxo-connector [visible]="true"></dxo-connector>
+                      </dxo-label>
+                    </dxi-series>
+                    <dxo-legend [margin]="0" horizontalAlignment="center" verticalAlignment="bottom"></dxo-legend>
+                    <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip">
+                    </dxo-tooltip>
+                  </dx-pie-chart>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </mat-card>
+      <mat-card class="mat-elevation-z8 action-card" style="margin-bottom: 70px !important;">
+        <h3>Vendas Por Equipa</h3>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="9">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title"><i class="fa fa-chart-area mr-1"></i>Últimos 31 dias</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <dx-chart id="chart3" #chart3 [dataSource]="team_sale_histogram.team_histograms">
+                    <dxi-series *ngFor="let leader of team_sale_histogram.team_cards"
+                      [valueField]="leader.team_extension" [name]="leader.team_name" [color]="leader.team_color">
+                    </dxi-series>
+                    <dxi-value-axis position="left">
+                      <dxo-title text="Equipas"></dxo-title>
+                    </dxi-value-axis>
+                    <dxo-common-series-settings argumentField="label" type="stackedBar">
+                    </dxo-common-series-settings>
+                    <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+                    </dxo-legend>
+                    <dxo-tooltip [enabled]="true" location="edge">
+                    </dxo-tooltip>
+                  </dx-chart>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="3">
+              <div class="card">
+                <div class="card-header border-0">
+                  <div class="d-flex justify-content-between">
+                    <h3 class="card-title"><i class="fa fa-chart-area mr-1"></i>Este Mês</h3>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="progress-group" *ngFor="let team of team_sale_histogram.team_cards">
+                    {{team.team_name}}
+                    <span class="float-right"><b>{{team.month_sales}}</b>/{{team.month_objectives}}</span>
+                    <div class="progress progress-sm">
+                      <div class="progress-bar" [matTooltip]="team.team_color" [ngStyle]="{'width': team.month_sales > 0 ? percentage(team) :
+                        '0%', 'background-color': team.team_color ? team.team_color : '#007bff' }"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </mat-card>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</ion-content>

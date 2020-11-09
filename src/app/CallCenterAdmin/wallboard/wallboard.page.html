@@ -1,0 +1,499 @@
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css">
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js">
+</script>
+
+<ion-header>
+  <ion-toolbar>
+    <button slot="start" mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col size="8" class="ion-no-padding">
+          <div>
+            <ion-title slot="start" style="padding: 0;">
+              <ion-img src="../../assets/LOGO_Medicare_ANGOLA.svg" class="logo_cursor" routerLink="/home"></ion-img>
+            </ion-title>
+          </div>
+        </ion-col>
+        <ion-col size="4" class="ion-no-padding username">
+          <div *ngIf="user">
+            <b>{{user.name}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <mat-drawer-container hasBackdrop="true" autosize>
+    <mat-drawer #drawer mode="over" class="menu-mat-drawer">
+      <app-menu-item-modal active_url='/CallCenterAdmin/wallboard'></app-menu-item-modal>
+    </mat-drawer>
+    <mat-drawer-content class="ion-padding" *ngIf="show">
+      <ion-grid>
+        <ion-row *ngIf="global" class="global_row">
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fas fa-hand-holding-usd"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Vendas Global</span>
+                <span class="info-box-number">{{global.global_sales}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Total Chamadas Conversadas</span>
+                <span class="info-box-number">{{global.total_talked_calls}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Clientes Conversados</span>
+                <span class="info-box-number">{{global.talked_customer_calls}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Total Horas Conversadas</span>
+                <span class="info-box-number">{{global.total_talked_time}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Total Médio Conversão</span>
+                <span class="info-box-number">{{global.talked_average_time}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Taxa de Conversão</span>
+                <span class="info-box-number">{{global.covertion_tax}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Taxa Conversão por Cliente</span>
+                <span class="info-box-number">{{global.covertion_customer_tax}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Taxa Conversão por Hora</span>
+                <span class="info-box-number">{{global.covertion_hour_tax}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="info-box mat-elevation-z8">
+              <span class="info-box-icon bg-danger"><i class="fa fa-phone-volume"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Taxa de Eficiência</span>
+                <span class="info-box-number">{{global.covertion_efficiency_tax}}</span>
+              </div>
+            </div>
+          </ion-col>
+          <!-- <ion-col size="2"></ion-col> -->
+        </ion-row>
+        <ion-row class="call_monitor">
+          <ion-col size="9">
+            <mat-card class="mat-elevation-z8 action-card">
+              <div class="card-header ui-sortable-handle" style="cursor: move;width: 100%;">
+                <h3 class="card-title">
+                  <i class="fa fa-chart-area mr-1"></i>
+                  Monitor de Chamadas
+                </h3>
+                <div class="card-tools">
+                  <mat-form-field>
+                    <mat-label>Campanha</mat-label>
+                    <mat-select (selectionChange)="onStatusChange($event.value)" [formControl]="campaignForm">
+                      <mat-option *ngFor="let element of user_call_campaigns" [value]="element.campaign_id">
+                        {{element.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>&nbsp;
+                  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+                    <mat-button-toggle value="1" (click)="set_minute(1)">1min</mat-button-toggle>
+                    <mat-button-toggle value="5" (click)="set_minute(5)">5min</mat-button-toggle>
+                    <mat-button-toggle value="15" (click)="set_minute(15)">15min</mat-button-toggle>
+                    <mat-button-toggle value="30" (click)="set_minute(30)">30min</mat-button-toggle>
+                    <mat-button-toggle value="60" (click)="set_minute(60)">1hora</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+              </div>
+              <dx-chart id="chart" palette="violet" [dataSource]="campaign_histogram">
+                <dxi-series valueField="abandoned_calls" name="Abandonadas" color="#FF0000"></dxi-series>
+                <dxi-series valueField="in_queue_calls" name="Em Espera" color="#FEC135"></dxi-series>
+                <dxi-series valueField="short_calls" name="Curtas" color="#3333FF"></dxi-series>
+                <dxi-series valueField="in_call" name="Activas" color="#009900"></dxi-series>
+                <dxo-common-series-settings #seriesSettings argumentField="label" type="spline">
+                </dxo-common-series-settings>
+                <dxo-margin [bottom]="20"></dxo-margin>
+                <dxo-common-axis-settings>
+                  <dxo-grid [visible]="true"></dxo-grid>
+                </dxo-common-axis-settings>
+                <dxo-legend verticalAlignment="bottom" horizontalAlignment="center">
+                </dxo-legend>
+                <dxo-argument-axis [allowDecimals]="false" [axisDivisionFactor]="60">
+                  <dxo-label>
+                    <dxo-format type="decimal"></dxo-format>
+                  </dxo-label>
+                </dxo-argument-axis>
+                <dxo-tooltip [enabled]="true"></dxo-tooltip>
+              </dx-chart>
+            </mat-card>
+          </ion-col>
+          <ion-col size="3">
+            <mat-card class="mat-elevation-z8">
+              <h2>Inbound</h2>
+              <table class="table table-bordered">
+                <tbody>
+                  <tr>
+                    <td>Oferecidas</td>
+                    <td *ngIf="inboundStatus && inboundStatus.Offered_calls">{{inboundStatus.Offered_calls}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Em Espera</td>
+                    <td *ngIf="inboundStatus && inboundStatus.on_hold_calls">{{inboundStatus.on_hold_calls}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Atendidas</td>
+                    <td *ngIf="inboundStatus && inboundStatus.answered_calls">
+                      {{inboundStatus.answered_calls}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Abandonadas</td>
+                    <td *ngIf="inboundStatus && inboundStatus.abandoned_calls">
+                      {{inboundStatus.abandoned_calls}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Eficácia %</td>
+                    <td *ngIf="inboundStatus && inboundStatus.sucess_tax">{{inboundStatus.sucess_tax}}</td>
+                  </tr>
+                  <tr>
+                    <td>Vendas</td>
+                    <td>N/A</td>
+                  </tr>
+                  <tr>
+                    <td>Taxa de Conversão %</td>
+                    <td>N/A</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-no-padding best_top">
+          <ion-col size="6" class="ion-no-padding">
+            <ion-grid style="padding: 0 !important">
+              <ion-row>
+                <ion-col size="12">
+                  <mat-card class="mat-elevation-z8">
+                    <h2>TOP 3 - Melhores Vendedores</h2>
+                    <div class="card-body table-responsive p-0">
+                      <table class="table table-head-fixed" *ngIf="topSallers">
+                        <thead>
+                          <tr>
+                            <th class="sorting" matTooltip="Agente (Extensão)">Agente</th>
+                            <th matTooltip="Montante">Montante</th>
+                            <th matTooltip="Vendas">V.</th>
+                            <th matTooltip="Chamadas">Chamadas</th>
+                            <th matTooltip="Horas Conversadas">H.C</th>
+                            <th matTooltip="Tempo Médio de Conversação">T.M.C</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let best of topSallers.best_sallers">
+                            <td class="uname">{{best.extension_name}}</td>
+                            <td><span class="badge" [ngClass]="{'bg-success': best.sales_amount >= 1000000.00, 'bg-warning' :
+                                best.sales_amount < 1000000.00 && best.sales_amount >= 500000.00, 'bg-danger' :
+                                  best.sales_amount < 500000.00 }">{{best.formated_sales_amount}}</span>
+                            </td>
+                            <td>{{best.sales_count}}</td>
+                            <td>{{best.total_calls}}</td>
+                            <td>{{best.total_call_time}}</td>
+                            <td>{{best.average_call_time}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </mat-card>
+                </ion-col>
+                <ion-col size="12">
+                  <mat-card class="mat-elevation-z8">
+                    <h2>TOP 3 - Piores Vendedores</h2>
+                    <div class="card-body table-responsive p-0">
+                      <table class="table table-head-fixed" *ngIf="topSallers">
+                        <thead>
+                          <tr>
+                            <th matTooltip="Agente (Extensão)">Agente</th>
+                            <th matTooltip="Montante">Montante</th>
+                            <th matTooltip="Vendas">V.</th>
+                            <th matTooltip="Chamadas">Chamadas</th>
+                            <th matTooltip="Horas Conversadas">H.C</th>
+                            <th matTooltip="Tempo Médio de Conversação">T.M.C</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let bad of topSallers.bad_sellers">
+                            <td class="uname">{{bad.extension_name}}</td>
+                            <td>
+                              <span class="badge bg-danger">{{bad.formated_sales_amount}}</span>
+                            </td>
+                            <td>{{bad.sales_count}}</td>
+                            <td>{{bad.total_calls}}</td>
+                            <td>{{bad.total_call_time}}</td>
+                            <td>{{bad.average_call_time}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </mat-card>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="8">
+                  <mat-card class="mat-elevation-z8">
+                    <h2>Agentes em Campanha</h2>
+                    <div class="card-body table-responsive p-0">
+                      <table class="table table-head-fixed">
+                        <thead>
+                          <tr>
+                            <th>Campanha</th>
+                            <th>Logados</th>
+                            <th>Em Chamada</th>
+                            <th>Ready</th>
+                            <th>Not Ready</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let campaign of campaignAgents">
+                            <td>{{campaign.row}}</td>
+                            <td><span *ngIf="campaign.columns.total_online">{{campaign.columns.total_online}}</span>
+                              <span *ngIf="!campaign.columns.total_online">0</span>
+                            </td>
+                            <td><span *ngIf="campaign.columns.incall">{{campaign.columns.incall}}</span>
+                              <span *ngIf="!campaign.columns.incall">0</span>
+                            </td>
+                            <td><span *ngIf="campaign.columns.available">{{campaign.columns.available}}</span>
+                              <span *ngIf="!campaign.columns.available">0</span>
+                            </td>
+                            <td><span *ngIf="campaign.columns.unavailable">{{campaign.columns.unavailable}}</span>
+                              <span *ngIf="!campaign.columns.unavailable">0</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </mat-card>
+                </ion-col>
+                <ion-col size="4">
+                  <mat-card class="mat-elevation-z8 action-card">
+                    <h2>TOP 3 - Qualificações</h2><br>
+                    <h2>Inbound</h2>
+                    <table class="table table-bordered" *ngIf="topQualifications && topQualifications.inbound">
+                      <tbody>
+                        <tr *ngFor="let inbound of topQualifications.inbound">
+                          <td>{{inbound.qualification_name}}</td>
+                          <td style="width: 7%;">{{inbound.qualification_count}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <h2>Outbound</h2>
+                    <table class="table table-bordered" *ngIf="topQualifications && topQualifications.outbound">
+                      <tbody>
+                        <tr *ngFor="let outbound of topQualifications.outbound">
+                          <td>{{outbound.qualification_name}}</td>
+                          <td style="width: 7%;">{{outbound.qualification_count}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="7">
+                  <mat-card class="mat-elevation-z8">
+                    <h2>Outbound</h2>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <td>Tentadas</td>
+                          <td *ngIf="outboundStatus && outboundStatus.tried_calls">
+                            {{outboundStatus.tried_calls}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Conversadas</td>
+                          <td *ngIf="outboundStatus && outboundStatus.pickedup_calls">
+                            {{outboundStatus.pickedup_calls}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Taxa de sucesso %</td>
+                          <td *ngIf="outboundStatus && outboundStatus.sucess_tax">
+                            {{outboundStatus.sucess_tax}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Vendas</td>
+                          <td>N/A</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa de Conversão %</td>
+                          <td>N/A</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </ion-col>
+                <ion-col size="5">
+                  <mat-card class="mat-elevation-z8">
+                    <h2>Micro Campanha Venda Gravada</h2>
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr *ngFor="let micro of get_microCampaign_1">
+                          <td>{{micro.status_name}}</td>
+                          <td>
+                            {{micro.status_count}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </mat-card>
+                </ion-col>
+                <ion-col size="12">
+                  <mat-card class="mat-elevation-z8">
+                    <h2>Tempo de Conversação por Campanha</h2>
+                    <div class="card-body table-responsive p-0">
+                      <table class="table table-head-fixed">
+                        <thead>
+                          <th>Campanha</th>
+                          <th>Total de Conversação</th>
+                          <th>Média de Conversação</th>
+                          <!-- <th>Total em Espera</th> -->
+                          <th>Média em Espera</th>
+                          <th>Taxa de Eficiência</th>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let cTime of campaignTimes">
+                            <td>{{cTime.campaign_channel}}</td>
+                            <td>{{cTime.total_call_time}}</td>
+                            <td>{{cTime.average_call_time}}</td>
+                            <!-- <td>{{cTime.total_wait_time}}</td> -->
+                            <td>{{cTime.average_wait_time}}</td>
+                            <td>{{cTime.percent_efficiency}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </mat-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-col>
+          <ion-col size="6">
+            <mat-card class="mat-elevation-z8">
+              <h2>Comerciais</h2>
+              <div class="card-body table-responsive p-0">
+                <table class="table table-head-fixed">
+                  <thead>
+                    <th></th>
+                    <th matTooltip="Intervalo"></th>
+                    <th>Agente</th>
+                    <th matTooltip="Campanha">Campanha</th>
+                    <th matTooltip="Vendas">V.</th>
+                    <th matTooltip="Chamadas">Chamadas</th>
+                    <th matTooltip="Horas Conversadas">H.C</th>
+                    <th matTooltip="Tempo Médio de Conversação">T.M.C</th>
+                  </thead>
+                  <tbody>
+                    <tr style="width: 3%;" *ngFor="let agent of agentStatus">
+                      <td>
+                        <button *ngIf="agent.agent_status === 'loggedoff'" mat-mini-fab [matTooltip]="getStatus(agent)"
+                          style="background-color: #acacac;">
+                          <mat-icon>phone_disabled</mat-icon>
+                        </button>
+                        <button *ngIf="agent.agent_status === 'unavailable'" mat-mini-fab [matTooltip]="getStatus(agent)"
+                          style="background-color: #dc3545;">
+                          <mat-icon>phone_locked</mat-icon>
+                        </button>
+                        <button *ngIf="agent.agent_status === 'available'" mat-mini-fab [matTooltip]="getStatus(agent)"
+                          style="background-color: #ffc107;">
+                          <mat-icon>phone</mat-icon>
+                        </button>
+                        <button *ngIf="agent.agent_status === 'incall'" mat-mini-fab [matTooltip]="getStatus(agent)"
+                          style="background-color: #00ff22;">
+                          <mat-icon>phone_in_talk</mat-icon>
+                        </button>
+                        <button *ngIf="agent.agent_status != 'loggedoff' && agent.agent_status != 'unavailable' &&
+                          agent.agent_status != 'available' && agent.agent_status != 'incall'"
+                          [matTooltip]="getStatus(agent)" mat-mini-fab style="background-color: #0011ff;">
+                          <mat-icon>error_outline</mat-icon>
+                        </button>
+                      </td>
+                      <td style="width: 3%;">
+                        <button mat-mini-fab [matTooltip]="getInterval(agent)" [ngStyle]="{'background-color': agent.interval_type === 1 ?
+                          'rgb(10, 14, 46)' : '#dc3545' }">
+                          <mat-icon *ngIf="agent.interval_type === 1">headset_mic</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 2">restaurant</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 3">supervised_user_circle</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 4">person_pin</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 5">report</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 6">settings_applications</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 7">wc</mat-icon>
+                          <mat-icon *ngIf="agent.interval_type === 8">voice_over_off</mat-icon>
+                          <ion-icon *ngIf="agent.interval_type === 11"
+                            class="mat-icon notranslate material-icons mat-icon-no-color" name="logo-whatsapp"
+                            slot="start"></ion-icon>
+                          <mat-icon *ngIf="!agent.interval_type">mic_off</mat-icon>
+                        </button>
+                      </td>
+                      <td class="uname">{{agent.extension_name}}</td>
+                      <td>{{agent.campaign}}</td>
+                      <td>{{agent.sales_count}}</td>
+                      <td>{{agent.total_calls}}</td>
+                      <td>{{agent.total_call_time}}</td>
+                      <td>{{agent.average_call_time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </mat-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</ion-content>

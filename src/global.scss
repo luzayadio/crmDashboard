@@ -1,0 +1,41 @@
+// http://ionicframework.com/docs/theming/
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+
+
+
+@import '~@angular/material/theming';
+@include mat-core();
+$app-primary: mat-palette($mat-indigo);
+$app-accent: mat-palette($mat-pink);
+$app-warn: mat-palette($mat-red);
+
+// Custom Sass colors vars (will be available in all the project)
+$primary: mat-color($app-primary);
+$accent: mat-color($app-accent);
+$warn: mat-color($app-warn);
+
+$theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+@include angular-material-theme($theme);
+
+// Use this import in a real project instead
+@import '~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme.scss';
+// @import 'dist/core/datetimepicker/datetimepicker-theme.scss';
+
+// Using the $theme variable from the pre-built theme you can call the theming function
+@include mat-datetimepicker-theme($theme);
+
+label.mat-optgroup-label {
+    background-color: #FCCDCF !important;
+    color: black !important;
+}

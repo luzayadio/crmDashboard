@@ -1,0 +1,87 @@
+.badge {
+    font-size: 17px !important;
+}
+
+table {
+    margin-top: 0 !important;
+}
+
+.status {
+    display: inline-block;
+    border-radius: 13px;
+    width: 15px;
+    height: 15px;
+    text-align: center !important;
+}
+
+td button {
+    width: 33px !important;
+    height: 33px !important;
+
+    mat-icon {
+        font-size: 19px !important;
+    }
+}
+
+::ng-deep .caption {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+::ng-deep #chart {
+    width: auto !important;
+}
+
+mat-card {
+    height: 100% !important;
+}
+
+@media(max-width: 700px) {
+    .global_row ion-col {
+        min-width: 50%;
+    }
+
+    .info-box-icon {
+        display: none;
+    }
+
+    .info-box .info-box-text,
+    .info-box .progress-description {
+        white-space: normal;
+    }
+
+    .call_monitor {
+        ion-col {
+            min-width: 100%;
+        }
+
+        .card-header>.card-tools {
+            float: none;
+        }
+
+        .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+            padding: 0 5px !important;
+        }
+    }
+
+    .best_top {
+        ion-col {
+            min-width: 100%;
+        }
+    }
+
+    mat-drawer-content {
+        padding: 0 !important;
+    }
+
+    .badge {
+        font-size: .8rem !important;
+    }
+
+    .card-body.p-0 .table tbody>tr>td:first-of-type,
+    .card-body.p-0 .table tbody>tr>th:first-of-type,
+    .card-body.p-0 .table thead>tr>td:first-of-type,
+    .card-body.p-0 .table thead>tr>th:first-of-type {
+        padding-left: 5px !important;
+    }
+}
