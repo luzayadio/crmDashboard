@@ -56,12 +56,6 @@ export class Functions {
         this.presentAlert('Sem acesso a internet.', 'Alerta');
       } else if (error.status === 409) {
         this.presentAlert('Informação já existente na base de dados.', 'Alerta');
-      } else if (error.status === 423 && !checkinError) {
-        this.router.navigateByUrl('CallCenterAgent/checkin');
-        this.presentAlert('É necessário fazer o Check In.', 'Alerta');
-      } else if (error.status === 451 && !checkinError) {
-        this.router.navigateByUrl('CallCenterAgent/checkin');
-        this.presentAlert('É necessário voltar a Trabalhar.', 'Alerta');
       } else {
         this.presentAlert('Ocorreu um erro ao processar os dados.', 'Alerta');
       }
@@ -127,7 +121,7 @@ export class Functions {
         {
           text: 'Sim',
           handler: () => {
-            this.storage.remove('user_token').then(() => {
+            this.storage.remove('user_token_dash').then(() => {
               this.router.navigateByUrl('/login');
             });
           }

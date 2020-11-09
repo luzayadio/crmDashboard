@@ -70,9 +70,6 @@ export class DashboardAnalyzePage {
   @ViewChild('TABLE_qps_bd') table_qps_bd: ElementRef;
   @ViewChild('TABLE_fps_bd') table_fps_bd: ElementRef;
 
-  // @ViewChild(MatPaginator, {}) paginator: MatPaginator;
-  // @ViewChild(MatSort, {}) sort: MatSort;
-
   @ViewChild('qps_bd') qps_bd: MatCheckbox;
 
   constructor(public loadingController: LoadingController, private router: Router,
@@ -85,7 +82,7 @@ export class DashboardAnalyzePage {
     });
     await loading.present();
     try {
-      this.storage.get('user_token').then(async (user_api_token) => {
+      this.storage.get('user_token_dash').then(async (user_api_token) => {
         if (user_api_token) {
           this.userDao.getUserInfoByToken(user_api_token, loading).then(async (user) => {
             this.user = user;
@@ -243,7 +240,6 @@ export class DashboardAnalyzePage {
   }
 
   ionViewWillLeave() {
-    console.log('ionViewWillLeave');
     this.subscription.forEach(s => {
       s.unsubscribe();
     })
@@ -386,7 +382,7 @@ export class DashboardAnalyzePage {
     const selected = this.db_contacts_per_reference.data.find((d) => d.ref_id === ref_id);
     if (selected && selected.data_per_state) {
       this.db_contacts_per_reference_selected = selected;
-      this.storage.set('db_contacts_per_reference_selected', selected);
+      this.storage.set('db_contacts_per_reference_selected_dash', selected);
     }
   }
 

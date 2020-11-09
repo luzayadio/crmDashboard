@@ -104,7 +104,7 @@ export class MenuItemModalComponent implements OnInit {
     private userDao: UserService, private router: Router, public functions: Functions) { }
 
   async ngOnInit() {
-    this.storage.get('user_token').then(async (user_api_token) => {
+    this.storage.get('user_token_dash').then(async (user_api_token) => {
       if (user_api_token) {
         await this.userDao.getUserInfoByToken(user_api_token).then(async (user) => {
           this.user = user;

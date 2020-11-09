@@ -24,7 +24,8 @@ export class LoginPage {
   ionViewWillEnter() {
     this.activatedRoute.params.subscribe((params) => {
       if (params.logout === 'logout') {
-        this.storage.remove('db_contacts_per_reference_selected').then();
+        this.storage.remove('user_token_dash').then();
+        this.storage.remove('db_contacts_per_reference_selected_dash').then();
       } else {
         this.redirectUser();
       }
@@ -39,7 +40,7 @@ export class LoginPage {
     const user = this.form.value;
     this.userDao.userLogin(user, loading).then((user_result) => {
       if (user_result) {
-        this.storage.set('user_token', user_result['api_token']).then(async () => {
+        this.storage.set('user_token_dash', user_result['api_token']).then(async () => {
           this.redirectUser(loading);
         }, () => {
           loading.dismiss();

@@ -45,7 +45,7 @@ export class WallboardPage {
     });
     await loading.present();
     try {
-      this.storage.get('user_token').then(async (user_api_token) => {
+      this.storage.get('user_token_dash').then(async (user_api_token) => {
         if (user_api_token) {
           await this.userDao.getUserInfoByToken(user_api_token, loading).then(async (user) => {
             this.user = user;
