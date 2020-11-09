@@ -27,7 +27,11 @@ export class LoginPage {
         this.storage.remove('user_token_dash').then();
         this.storage.remove('db_contacts_per_reference_selected_dash').then();
       } else {
-        this.redirectUser();
+        this.storage.get('user_token_dash').then((result) => {
+          if (result) {
+            this.redirectUser();
+          }
+        });
       }
     });
   }
